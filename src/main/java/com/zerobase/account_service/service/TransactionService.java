@@ -40,6 +40,7 @@ public class TransactionService {
                     .transactionResult(true)
                     .transactionId(tid)
                     .tradeMoney(tradeMoney)
+                    .tradeDateTime(LocalDateTime.now().toString())
                     .build();
         } catch (Exception e) {
             String failedTid = UUID.randomUUID().toString();
@@ -61,6 +62,8 @@ public class TransactionService {
 
             if (transaction == null) {
                 throw new TradeFailException("트랜잭션 id에 해당하는 거래 내역이 없습니다.");
+            } else if (transaction.isResult() == false) {
+                throw new TradeFailException("해당 트랜잭션은 실패한 거래입니다.");
             } else if (transaction.getTradeType() == TradeType.BALANCE_USE_CANCEL) {
                 throw new TradeFailException("동일한 거래 취소 유형의 트랜잭션은 중복 취소할 수 없습니다.");
             } else if (transaction.getAccountNumber() != accountNumber) {
@@ -68,8 +71,8 @@ public class TransactionService {
             } else if (transaction.getTradeMoney() != tradeMoney) {
                 throw new TradeFailException("원거래 금액과 취소 금액이 다릅니다.");
             }
+
             String newTid = UUID.randomUUID().toString();
-            LocalDateTime curTime = LocalDateTime.now();
 
             accountRepository.cancelUsageMoney(userId, accountNumber, tradeMoney);
 
@@ -86,7 +89,7 @@ public class TransactionService {
                     .transactionResult(true)
                     .transactionId(newTid)
                     .tradeMoney(tradeMoney)
-                    .tradeDateTime(curTime.toString())
+                    .tradeDateTime(LocalDateTime.now().toString())
                     .build();
         } catch (Exception e) {
             String failedTid = UUID.randomUUID().toString();

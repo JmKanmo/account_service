@@ -160,8 +160,8 @@ public class AccountRepository {
                     throw new TradeFailException(AccountServiceUtil.FailMessage.DEACTIVATE_ACCOUNT);
                 } else if (account.getMoney() < tradeMoney) {
                     throw new TradeFailException("거래 금액이 잔액보다 큽니다.");
-                } else if (tradeMoney <= 0 || tradeMoney > AccountServiceUtil.MAX_TRADE_MONEY) {
-                    if (tradeMoney <= 0) {
+                } else if (tradeMoney < 0 || tradeMoney > AccountServiceUtil.MAX_TRADE_MONEY) {
+                    if (tradeMoney < 0) {
                         throw new TradeFailException("거래 금액은 음수값이 올 수 없습니다.");
                     } else if (tradeMoney > AccountServiceUtil.MAX_TRADE_MONEY) {
                         throw new TradeFailException("거래 금액이 최대 거래 금액: "
