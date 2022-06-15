@@ -46,7 +46,7 @@ public class TransactionService {
             String failedTid = UUID.randomUUID().toString();
             transactionRepository.save(Transaction.builder()
                     .transactionId(failedTid)
-                    .tradeType(TradeType.BALANCE_USE_CANCEL)
+                    .tradeType(TradeType.BALANCE_USE)
                     .result(false)
                     .accountNumber(accountNumber)
                     .tradeMoney(tradeMoney)
