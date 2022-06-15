@@ -5,6 +5,9 @@ Account(계좌) 시스템은 사용자와 계좌의 정보를 저장하고 있�
 거래금액만큼 늘리는(결제 취소) 거래 관리 기능을 제공하는 시스템
 
 ---
+개발 진행 방식 <br>
+- TDD(Test Driven Development) 진행 
+<br>
 기술 스택
 
 - JAVA (jdk 1.8)
@@ -13,8 +16,7 @@ Account(계좌) 시스템은 사용자와 계좌의 정보를 저장하고 있�
 - JPA + hibernate 
 - h2database 
 - lombok, junit, mockito 
-- swagger
-
+- Swagger UI
 ---
 REST API 구성 
 
