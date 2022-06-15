@@ -22,7 +22,7 @@ REST API 구성
 
 ✅ 계좌 관련 API
 1) 계좌 생성 <br>
-/accout/create?userId={}& 
+/accout/create?userId={}&tradeMoney={}
 
 결과 <br>
   - 성공의 경우 <br> 
