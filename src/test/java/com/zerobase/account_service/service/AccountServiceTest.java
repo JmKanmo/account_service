@@ -1,7 +1,7 @@
 package com.zerobase.account_service.service;
 
 import com.zerobase.account_service.domain.Account;
-import com.zerobase.account_service.domain.dto.AccountResponse;
+import com.zerobase.account_service.dto.AccountResponse;
 import com.zerobase.account_service.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

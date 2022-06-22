@@ -2,9 +2,10 @@ package com.zerobase.account_service.repository;
 
 import com.zerobase.account_service.domain.Account;
 import com.zerobase.account_service.domain.UserInfo;
-import com.zerobase.account_service.domain.dto.AccountResponse;
+import com.zerobase.account_service.dto.AccountResponse;
+import com.zerobase.account_service.exception.FailMessage;
 import com.zerobase.account_service.util.AccountServiceUtil;
-import com.zerobase.account_service.util.TradeFailException;
+import com.zerobase.account_service.exception.TradeFailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
@@ -34,17 +35,17 @@ public class AccountRepository {
             UserInfo userInfo = valueOperations.get(userId);
 
             if (userInfo == null) {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.EMPTY_USER_INFO);
+                throw new TradeFailException(FailMessage.EMPTY_USER_INFO.getName());
             }
 
             Map<Long, Account> accountMap = userInfo.getAccountMap();
 
             if (accountMap.size() >= AccountServiceUtil.USER_MAX_ACCOUNT_SIZE) {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.ALREADY_MAX_ACCOUNT);
+                throw new TradeFailException(FailMessage.ALREADY_MAX_ACCOUNT.getName());
             } else if (tradeMoney < 0) {
-                throw new TradeFailException("초기 잔액은 음수 값이 올 수 없습니다.");
+                throw new TradeFailException(FailMessage.TRADE_MONEY_NEGATIVE.getName());
             } else if (tradeMoney > AccountServiceUtil.MAX_TRADE_MONEY) {
-                throw new TradeFailException("초기 잔액은 " + AccountServiceUtil.MAX_TRADE_MONEY + " 보다 클 수 없습니다.");
+                throw new TradeFailException(FailMessage.TRADE_MONEY_NOT_BIGGER_THAN.getName());
             }
 
             Long accountNumber = AccountServiceUtil.generateRandomNumber();
@@ -79,7 +80,7 @@ public class AccountRepository {
                     .dateTime(account.getCreatedTime())
                     .build();
         } catch (Exception e) {
-            throw new TradeFailException(AccountServiceUtil.FailMessage.ERROR_OCCUR + e.getMessage());
+            throw new TradeFailException(FailMessage.ERROR_OCCUR.getName() + e.getMessage());
         }
     }
 
@@ -88,7 +89,7 @@ public class AccountRepository {
             UserInfo userInfo = valueOperations.get(userId);
 
             if (userInfo == null) {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.EMPTY_USER_INFO);
+                throw new TradeFailException(FailMessage.EMPTY_USER_INFO.getName());
             }
 
             Map<Long, Account> accountMap = userInfo.getAccountMap();
@@ -97,11 +98,11 @@ public class AccountRepository {
                 Account account = accountMap.get(accountNumber);
 
                 if (!userId.equals(account.getHolder())) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.MISMATCH_ACCOUNT_USER);
+                    throw new TradeFailException(FailMessage.MISMATCH_ACCOUNT_USER.getName());
                 } else if (account.getMoney() > 0) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.ACCOUNT_LEFT_MONEY);
+                    throw new TradeFailException(FailMessage.ACCOUNT_LEFT_MONEY.getName());
                 } else if (!account.isActivate()) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.DEACTIVATE_ACCOUNT);
+                    throw new TradeFailException(FailMessage.DEACTIVATE_ACCOUNT.getName());
                 } else {
                     userInfoRedisTemplate.execute(new SessionCallback<Object>() {
                         @Override
@@ -124,10 +125,10 @@ public class AccountRepository {
                         .dateTime(LocalDateTime.now().toString())
                         .build();
             } else {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.NO_COINCIDE_ACCOUNT_INFO);
+                throw new TradeFailException(FailMessage.NO_COINCIDE_ACCOUNT_INFO.getName());
             }
         } catch (Exception e) {
-            throw new TradeFailException(AccountServiceUtil.FailMessage.ERROR_OCCUR + e.getMessage());
+            throw new TradeFailException(FailMessage.ERROR_OCCUR.getName() + e.getMessage());
         }
     }
 
@@ -135,7 +136,7 @@ public class AccountRepository {
         UserInfo userInfo = valueOperations.get(userId);
 
         if (userInfo == null) {
-            throw new TradeFailException(AccountServiceUtil.FailMessage.EMPTY_USER_INFO);
+            throw new TradeFailException(FailMessage.EMPTY_USER_INFO.getName());
         }
 
         return new ArrayList<>(userInfo.getAccountMap().values());
@@ -146,7 +147,7 @@ public class AccountRepository {
             UserInfo userInfo = valueOperations.get(userId);
 
             if (userInfo == null) {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.EMPTY_USER_INFO);
+                throw new TradeFailException(FailMessage.EMPTY_USER_INFO.getName());
             }
 
             Map<Long, Account> accountMap = userInfo.getAccountMap();
@@ -155,9 +156,9 @@ public class AccountRepository {
                 Account account = accountMap.get(accountNumber);
 
                 if (!account.getHolder().equals(userId)) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.MISMATCH_ACCOUNT_USER);
+                    throw new TradeFailException(FailMessage.MISMATCH_ACCOUNT_USER.getName());
                 } else if (!account.isActivate()) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.DEACTIVATE_ACCOUNT);
+                    throw new TradeFailException(FailMessage.DEACTIVATE_ACCOUNT.getName());
                 } else if (account.getMoney() < tradeMoney) {
                     throw new TradeFailException("거래 금액이 잔액보다 큽니다.");
                 } else if (tradeMoney < 0 || tradeMoney > AccountServiceUtil.MAX_TRADE_MONEY) {
@@ -185,10 +186,10 @@ public class AccountRepository {
                 });
                 return valueOperations.get(userId).getAccountMap().get(accountNumber);
             } else {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.NO_COINCIDE_ACCOUNT_INFO);
+                throw new TradeFailException(FailMessage.NO_COINCIDE_ACCOUNT_INFO.getName());
             }
         } catch (Exception e) {
-            throw new TradeFailException(AccountServiceUtil.FailMessage.ERROR_OCCUR + e.getMessage());
+            throw new TradeFailException(FailMessage.ERROR_OCCUR.getName() + e.getMessage());
         }
     }
 
@@ -197,7 +198,7 @@ public class AccountRepository {
             UserInfo userInfo = valueOperations.get(userId);
 
             if (userInfo == null) {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.EMPTY_USER_INFO);
+                throw new TradeFailException(FailMessage.EMPTY_USER_INFO.getName());
             }
 
             Map<Long, Account> accountMap = userInfo.getAccountMap();
@@ -206,9 +207,9 @@ public class AccountRepository {
                 Account account = accountMap.get(accountNumber);
 
                 if (!account.getHolder().equals(userId)) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.MISMATCH_ACCOUNT_USER);
+                    throw new TradeFailException(FailMessage.MISMATCH_ACCOUNT_USER.getName());
                 } else if (!account.isActivate()) {
-                    throw new TradeFailException(AccountServiceUtil.FailMessage.DEACTIVATE_ACCOUNT);
+                    throw new TradeFailException(FailMessage.DEACTIVATE_ACCOUNT.getName());
                 }
                 userInfoRedisTemplate.execute(new SessionCallback<Object>() {
                     @Override
@@ -227,10 +228,10 @@ public class AccountRepository {
                 });
                 return valueOperations.get(userId).getAccountMap().get(accountNumber);
             } else {
-                throw new TradeFailException(AccountServiceUtil.FailMessage.NO_COINCIDE_ACCOUNT_INFO);
+                throw new TradeFailException(FailMessage.NO_COINCIDE_ACCOUNT_INFO.getName());
             }
         } catch (Exception e) {
-            throw new TradeFailException(AccountServiceUtil.FailMessage.ERROR_OCCUR + e.getMessage());
+            throw new TradeFailException(FailMessage.ERROR_OCCUR.getName() + e.getMessage());
         }
     }
 
@@ -252,7 +253,7 @@ public class AccountRepository {
         try {
             AccountServiceUtil.initializeUserInfos(this);
         } catch (Exception e) {
-            log.info("[AccountService] user account info initialize failed", e);
+            log.info(FailMessage.INITIALIZE_FAIL.getName(), e);
         }
     }
 }

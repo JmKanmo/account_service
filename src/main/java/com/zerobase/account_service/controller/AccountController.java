@@ -1,7 +1,7 @@
 package com.zerobase.account_service.controller;
 
 import com.zerobase.account_service.domain.Account;
-import com.zerobase.account_service.domain.dto.AccountResponse;
+import com.zerobase.account_service.dto.AccountResponse;
 import com.zerobase.account_service.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

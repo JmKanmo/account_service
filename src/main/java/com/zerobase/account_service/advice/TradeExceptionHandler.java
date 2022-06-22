@@ -1,7 +1,7 @@
 package com.zerobase.account_service.advice;
 
 
-import com.zerobase.account_service.domain.dto.FailResponse;
+import com.zerobase.account_service.dto.FailResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

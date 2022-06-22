@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class AccountServiceUtil {
     public static final long MAX_TRADE_MONEY = 99999999999L;
     public static final int USER_MAX_ACCOUNT_SIZE = 10;
-    public static final ConcurrentHashMultiset<Long> accountNumberSet = ConcurrentHashMultiset.create();
+    private static final ConcurrentHashMultiset<Long> accountNumberSet = ConcurrentHashMultiset.create();
 
     private AccountServiceUtil() {
     }
@@ -125,19 +125,5 @@ public class AccountServiceUtil {
         } catch (Exception e) {
             throw e;
         }
-    }
-
-    public static class FailMessage {
-        public static final String EMPTY_USER_INFO = "해당 사용자 정보가 없습니다.";
-        public static final String ALREADY_MAX_ACCOUNT = "최대 보유 가능 계좌(" + USER_MAX_ACCOUNT_SIZE + "개)를 이미 보유하고 있습니다.";
-
-        public static final String MISMATCH_ACCOUNT_USER = "사용자 아이디와 계좌 소유자가 일치하지 않습니다.";
-
-        public static final String NO_COINCIDE_ACCOUNT_INFO = "해당 계좌번호와 일치하는 계좌정보가 없습니다.";
-        public static final String DEACTIVATE_ACCOUNT = "계좌가 이미 해지상태 입니다.";
-
-        public static final String ACCOUNT_LEFT_MONEY = "남아있는 잔액이 있습니다.";
-
-        public static final String ERROR_OCCUR = "계좌 생성 도중 에러가 발생해 실패하였습니다. ";
     }
 }

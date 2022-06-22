@@ -2,11 +2,11 @@ package com.zerobase.account_service.service;
 
 import com.zerobase.account_service.domain.TradeType;
 import com.zerobase.account_service.domain.Transaction;
-import com.zerobase.account_service.domain.dto.TransactionResponse;
+import com.zerobase.account_service.dto.TransactionResponse;
+import com.zerobase.account_service.exception.FailMessage;
 import com.zerobase.account_service.repository.TransactionRepository;
 import com.zerobase.account_service.repository.AccountRepository;
-import com.zerobase.account_service.util.AccountServiceUtil;
-import com.zerobase.account_service.util.TradeFailException;
+import com.zerobase.account_service.exception.TradeFailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,15 +61,15 @@ public class TransactionService {
             Transaction transaction = transactionRepository.findByTransactionId(transactionId);
 
             if (transaction == null) {
-                throw new TradeFailException("트랜잭션 id에 해당하는 거래 내역이 없습니다.");
+                throw new TradeFailException(FailMessage.TRANSACTION_NOT_FOUND.getName());
             } else if (transaction.isResult() == false) {
-                throw new TradeFailException("해당 트랜잭션은 실패한 거래입니다.");
+                throw new TradeFailException(FailMessage.FAIL_TRANSACTION.getName());
             } else if (transaction.getTradeType() == TradeType.BALANCE_USE_CANCEL) {
-                throw new TradeFailException("동일한 거래 취소 유형의 트랜잭션은 중복 취소할 수 없습니다.");
+                throw new TradeFailException(FailMessage.OVERLAPPED_TYPE_TRANSACTION.getName());
             } else if (transaction.getAccountNumber() != accountNumber) {
-                throw new TradeFailException("트랜잭션이 해당 계좌의 거래가 아닙니다.");
+                throw new TradeFailException(FailMessage.MISMATCH_ACCOUNT_TRANSACTION.getName());
             } else if (transaction.getTradeMoney() != tradeMoney) {
-                throw new TradeFailException("원거래 금액과 취소 금액이 다릅니다.");
+                throw new TradeFailException(FailMessage.DIFFERENT_TRADE_CANCEL_MONEY.getName());
             }
 
             String newTid = UUID.randomUUID().toString();
@@ -110,7 +110,7 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findByTransactionId(transactionId);
 
         if (transaction == null) {
-            throw new TradeFailException("트랜잭션 id에 대한 거래 내역이 없습니다.");
+            throw new TradeFailException(FailMessage.TRANSACTION_NOT_FOUND.getName());
         }
         return transaction;
     }

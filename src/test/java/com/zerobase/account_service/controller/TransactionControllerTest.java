@@ -2,7 +2,7 @@ package com.zerobase.account_service.controller;
 
 import com.zerobase.account_service.domain.TradeType;
 import com.zerobase.account_service.domain.Transaction;
-import com.zerobase.account_service.domain.dto.TransactionResponse;
+import com.zerobase.account_service.dto.TransactionResponse;
 import com.zerobase.account_service.service.TransactionService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;

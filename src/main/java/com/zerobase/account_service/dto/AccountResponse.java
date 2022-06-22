@@ -1,4 +1,4 @@
-package com.zerobase.account_service.domain.dto;
+package com.zerobase.account_service.dto;
 
 import lombok.Builder;
 import lombok.Data;
